@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>思い出捏造日記</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%%22 y=%2250%%22 style=%22dominant-baseline:central;text-anchor:middle;font-size:90px;%22>📖</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>思い出捏造日記</h1>
+            <p>写真1枚から、Aiが勝手に今日の思い出を作り出します。</p>
+        </header>
+        <main>
+            <section class="input-group">
+                <label for="imageInput">写真を選ぶ</label>
+                <input type="file" id="imageInput" accept="image/*">
+
+                <div id="previewContainer">
+                    <img id="imagePreview" src="" alt="プレビュー画像" style="display: none; maxwidth: 100%;">
+                </div>
+            </section>
+
+            <section class="input-group">
+                <label for="modeSelect">モード</label>
+                <select id="modeSelect">
+                    <option value="感動">感動モード</option>
+                    <option value="ホラー">ホラーモード</option>
+                    <option value="SF">SFモード</option>
+                    <option value="中二病">中二病モード</option>
+                    <option value="記憶違い">記憶違いモード</option>
+                </select>
+            </section>
+            <section class="input-group">
+                <label for="fakeSlider">🎛️ 思い出の捏造率: <span id="fakeRateDisplay">100%</span></label>
+                <input type="range" id="fakeSlider" min="0" max="100" value="100">
+                <div class="slider-labels" style="display: flex; justify-content: space-between; font-size: 0.8em; color: #666;">
+                    <span>事実（0%）</span>
+                    <span>完全な嘘（100%）</span>
+                </div>
+            </section>
+
+            <button id="generateBtn">日記を捏造する</button>
+
+            <section id="resultSection" style="display: none; margin-top: 20px; padding: 15px; border: 1px solid #ccc;">
+                <h2>📖 捏造された日記</h2>
+                <div id="diaryOutput">
+                    </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
