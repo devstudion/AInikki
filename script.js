@@ -1,9 +1,15 @@
+/* =========================================
+   🔑 1. APIキーの確認と保存（安全なプロ仕様）
+   ========================================= */
 let API_KEY = localStorage.getItem("gemini_api_key");
 if (!API_KEY) {
     API_KEY = prompt("🔑 GeminiのAPIキーを入力してください（最初だけ）");
     localStorage.setItem("gemini_api_key", API_KEY);
 }
-// HTMLの要素を取得
+
+/* =========================================
+   🏷️ 2. HTMLの要素を取得
+   ========================================= */
 const imageInput = document.getElementById('imageInput');
 const imagePreview = document.getElementById('imagePreview');
 const modeSelect = document.getElementById('modeSelect');
@@ -14,29 +20,42 @@ const resultSection = document.getElementById('resultSection');
 const diaryOutput = document.getElementById('diaryOutput');
 const deleteBtn = document.getElementById('deleteBtn');
 
+// 画面切り替え用の要素
+const screenCalendar = document.getElementById('screenCalendar');
+const screenEditor = document.getElementById('screenEditor');
+const backBtn = document.getElementById('backBtn');
+
 let base64Image = null;
 let imageMimeType = null;
 
 /* =========================================
-   📅 カレンダーと保存・呼出の処理
+   📅 3. カレンダーと保存・呼出の処理
    ========================================= */
 let currentYear = new Date().getFullYear();
 let currentMonth = new Date().getMonth(); 
 let currentDay = new Date().getDate(); 
 
-// 最初から「今日の日付」をセット（例：2026年6月16日）
+// 基準となる日付
 let selectedDateStr = `${currentYear}年${currentMonth + 1}月${currentDay}日`; 
 
-// 💾 保存された日記を読み込む関数
+// 💾 保存された日記を読み込んで、画面の表示をスマートに切り替える関数
 function loadDiary(dateStr) {
     const savedDiary = localStorage.getItem(dateStr);
+    const photoInputArea = imageInput.parentElement; // 写真を選ぶエリア
+    
     if (savedDiary) {
-        // 保存されていたら画面に出す
+        // 📖 日記がある場合：写真入力と生成ボタンを隠して、結果だけをスッキリ表示！
+        photoInputArea.style.display = 'none';
+        generateBtn.style.display = 'none';
+        
         diaryOutput.textContent = savedDiary;
         resultSection.style.display = 'block';
         deleteBtn.style.display = 'block';
     } else {
-        // 保存されていなければ隠す
+        // 📝 日記がない場合：写真入力を表示して、結果エリアを隠す！
+        photoInputArea.style.display = 'block';
+        generateBtn.style.display = 'block';
+        
         resultSection.style.display = 'none';
         deleteBtn.style.display = 'none';
         diaryOutput.textContent = '';
@@ -46,7 +65,6 @@ function loadDiary(dateStr) {
 document.addEventListener("DOMContentLoaded", () => {
     renderCalendar();
     
-    // 画面が開いた直後に「今日の日付」と「保存された日記」を表示
     document.getElementById("selectedDateText").innerText = selectedDateStr;
     loadDiary(selectedDateStr);
     
@@ -84,25 +102,42 @@ function renderCalendar() {
         
         const dateStr = `${currentYear}年${currentMonth + 1}月${day}日`;
         
-        if (selectedDateStr === dateStr) {
+        // 🌟 実際の内蔵時計の「今日」だけを青く固定する！
+        const realTodayStr = `${new Date().getFullYear()}年${new Date().getMonth() + 1}月${new Date().getDate()}日`;
+        if (dateStr === realTodayStr) {
             dayDiv.classList.add("selected");
         }
         
         dayDiv.addEventListener("click", () => {
             selectedDateStr = dateStr;
-            renderCalendar(); 
             document.getElementById("selectedDateText").innerText = selectedDateStr;
-
-            // 日付をクリックしたときに保存データを呼び出す
+            
+            // その日の日記データを読み込む
             loadDiary(selectedDateStr);
+
+            // 🔄 画面を「日記エディタ」に切り替える（中に入る動き）
+            screenCalendar.style.display = "none";
+            screenEditor.style.display = "block";
         });
         
         daysContainer.appendChild(dayDiv);
     }
 }
 
+// ◀ カレンダーに戻るボタンの処理
+if(backBtn) {
+    backBtn.addEventListener("click", () => {
+        // 画面を「カレンダー」に戻す
+        screenEditor.style.display = "none";
+        screenCalendar.style.display = "block";
+        
+        // カレンダーを再描画して最新の状態にする
+        renderCalendar();
+    });
+}
+
 /* =========================================
-   📷 写真の読み込み処理
+   📷 4. 写真の読み込み処理
    ========================================= */
 imageInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
@@ -119,13 +154,15 @@ imageInput.addEventListener('change', (e) => {
     reader.readAsDataURL(file);
 });
 
-// スライダー（隠しているけどエラー防止のため残す）
-fakeSlider.addEventListener('input', (e) => {
-    fakeRateDisplay.textContent = `${e.target.value}%`;
-});
+// スライダー
+if(fakeSlider) {
+    fakeSlider.addEventListener('input', (e) => {
+        if(fakeRateDisplay) fakeRateDisplay.textContent = `${e.target.value}%`;
+    });
+}
 
 /* =========================================
-   🧠 AIに日記を書かせる＆保存する処理
+   🧠 5. AIに日記を書かせる＆保存する処理
    ========================================= */
 generateBtn.addEventListener('click', async () => {
     if (!base64Image) {
@@ -135,12 +172,17 @@ generateBtn.addEventListener('click', async () => {
 
     generateBtn.disabled = true;
     generateBtn.textContent = '🧠 AIが記憶を改ざん中...';
+    
+    // 生成中は一時的に結果エリアを見せておく
     resultSection.style.display = 'block';
-    deleteBtn.style.display = 'none'; // 生成中は削除ボタンを隠す
+    deleteBtn.style.display = 'none'; 
     diaryOutput.textContent = '（AIが文章を考えています。数秒お待ちください...）';
 
-    const selectedMode = modeSelect.options[modeSelect.selectedIndex].text;
-    const fakeRate = fakeSlider.value;
+    let selectedMode = "感動"; // default
+    if (modeSelect && modeSelect.options[modeSelect.selectedIndex]) {
+         selectedMode = modeSelect.options[modeSelect.selectedIndex].text;
+    }
+    let fakeRate = fakeSlider ? fakeSlider.value : 100;
 
     const promptText = `
 あなたは「思い出を勝手に捏造する日記ライター」です。
@@ -181,14 +223,11 @@ generateBtn.addEventListener('click', async () => {
         const data = await response.json();
         const diaryText = data.candidates[0].content.parts[0].text;
         
-        // ① 画面に表示する
-        diaryOutput.textContent = diaryText;
-
-        // 💾 ② ブラウザにテキストを保存する！！（ここが重要）
+        // 💾 ローカルストレージに保存する
         localStorage.setItem(selectedDateStr, diaryText);
 
-        // ③ 削除ボタンを表示する
-        deleteBtn.style.display = 'block';
+        // 🌟 これを呼ぶことで、入力欄がサッと消えて結果が美しく表示されます！
+        loadDiary(selectedDateStr);
 
     } catch (error) {
         console.error('エラー詳細:', error);
@@ -200,17 +239,21 @@ generateBtn.addEventListener('click', async () => {
 });
 
 /* =========================================
-   🗑️ 日記を削除する処理
+   🗑️ 6. 日記を削除する処理
    ========================================= */
 deleteBtn.addEventListener('click', () => {
     if (confirm(`${selectedDateStr} の日記を本当に削除しますか？`)) {
         // ブラウザの記憶から消し去る
         localStorage.removeItem(selectedDateStr);
-        
-        // 画面の表示をリセット
-        resultSection.style.display = 'none';
-        deleteBtn.style.display = 'none';
-        diaryOutput.textContent = '';
         alert('削除しました！');
+        
+        // 画像プレビューもリセットしておく
+        imageInput.value = '';
+        imagePreview.src = '';
+        imagePreview.style.display = 'none';
+        base64Image = null;
+
+        // 🌟 画面を「日記がない状態（入力画面）」に自動で戻す！
+        loadDiary(selectedDateStr); 
     }
 });

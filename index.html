@@ -14,57 +14,61 @@
             <p>写真1枚から、AIが勝手に思い出を作り出します。</p>
         </header>
 
-        <div class="calendar-container">
-            <div class="calendar-header">
-                <button id="prevMonth">◀</button>
-                <h2 id="calendarTitle"></h2>
-                <button id="nextMonth">▶</button>
+        <div id="screenCalendar">
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button id="prevMonth">◀</button>
+                    <h2 id="calendarTitle"></h2>
+                    <button id="nextMonth">▶</button>
+                </div>
+                <div class="calendar-weekdays">
+                    <div>日</div><div>月</div><div>火</div><div>水</div><div>木</div><div>金</div><div>土</div>
+                </div>
+                <div id="calendarDays" class="calendar-days"></div>
             </div>
-            <div class="calendar-weekdays">
-                <div>日</div><div>月</div><div>火</div><div>水</div><div>木</div><div>金</div><div>土</div>
+            <p style="text-align: center; color: #666; font-size: 0.9rem;">
+                👆 日付をタップして日記を開く
+            </p>
+        </div>
+
+        <div id="screenEditor" style="display: none;">
+            <button id="backBtn" style="background-color: #7f8c8d; margin-bottom: 20px; padding: 10px;">◀ カレンダーに戻る</button>
+
+            <div class="selected-date-status">
+                選択中の日付: <span id="selectedDateText">未選択</span>
             </div>
-            <div id="calendarDays" class="calendar-days"></div>
-        </div>
 
-        <div class="selected-date-status">
-            選択中の日付: <span id="selectedDateText">未選択（今日の日記になります）</span>
-        </div>
+            <div class="input-group">
+                <label>📷 写真を選ぶ</label>
+                <input type="file" id="imageInput" accept="image/*">
+                <div id="previewContainer">
+                    <img id="imagePreview" style="display:none; max-width: 100%; max-height: 300px; margin-top: 10px; border-radius: 8px;">
+                </div>
+            </div>
 
-        <div class="input-group">
-            <label>📷 写真を選ぶ</label>
-            <input type="file" id="imageInput" accept="image/*">
-            <div id="previewContainer">
-                <img id="imagePreview" style="display:none; max-width: 100%; max-height: 300px; margin-top: 10px; border-radius: 8px;">
+            <div class="input-group" style="display: none;">
+                <label>モード</label>
+                <select id="modeSelect">
+                    <option value="感動">感動モード</option>
+                    <option value="ホラー">ホラーモード</option>
+                    <option value="SF">SFモード</option>
+                    <option value="コメディ">コメディモード</option>
+                </select>
+            </div>
+            <div class="input-group" style="display: none;">
+                <label>🎛️ 思い出の捏造率: <span id="fakeRateDisplay">100%</span></label>
+                <input type="range" id="fakeSlider" min="0" max="100" value="100">
+            </div>
+
+            <button id="generateBtn">日記を捏造する</button>
+
+            <div id="resultSection" style="display: none; margin-top: 20px; padding: 15px;">
+                <p id="diaryOutput"></p>
+                <button id="deleteBtn" style="display: none; background-color: #e74c3c; margin-top: 15px;">🗑️ この日の日記を消す</button>
             </div>
         </div>
 
-        <div class="input-group" style="display: none;">
-            <label>モード</label>
-            <select id="modeSelect">
-                <option value="感動">感動モード</option>
-                <option value="ホラー">ホラーモード</option>
-                <option value="SF">SFモード</option>
-                <option value="コメディ">コメディモード</option>
-            </select>
-        </div>
-
-        <div class="input-group" style="display: none;">
-            <label>🎛️ 思い出の捏造率: <span id="fakeRateDisplay">100%</span></label>
-            <input type="range" id="fakeSlider" min="0" max="100" value="100">
-            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #888;">
-                <span>事実 (0%)</span>
-                <span>完全な嘘 (100%)</span>
-            </div>
-        </div>
-
-        <button id="generateBtn">日記を捏造する</button>
-
-        <div id="resultSection" style="display: none; margin-top: 20px; padding: 15px;">
-            <p id="diaryOutput"></p>
-            <button id="deleteBtn" style="display: none; background-color: #e74c3c; margin-top: 15px;">🗑️ この日の日記を消す</button>
-        </div>
     </div>
-    
     <script src="script.js"></script>
 </body>
 </html>
