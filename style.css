@@ -1,175 +1,225 @@
+:root {
+    --primary: #5e60ce;      /* 洗練されたパープル系 */
+    --accent: #48bfe3;       /* 爽やかなブルー系 */
+    --danger: #ff6b6b;       /* 柔らかい赤 */
+    --bg: #f4f6f8;           /* 少しグレーがかった背景色 */
+    --text: #2d3436;         /* 濃いグレーの文字色 */
+    --border: #e9ecef;       /* 薄い枠線 */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
-    background-color: #f4f7f6;
-    color: #333;
-    margin: 0;
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
     padding: 20px;
-    display: flex;
-    justify-content: center;
 }
 
 .container {
+    max-width: 450px;
+    margin: 0 auto;
     background-color: #fff;
-    max-width: 500px;
-    width: 100%;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    min-height: 90vh;
+    padding: 30px 24px;
+    border-radius: 20px; /* 全体的に丸みを帯びたデザイン */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
 }
 
 header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
-h1 {
-    font-size: 1.5rem;
-    color: #2c3e50;
-    margin-bottom: 10px;
+header h1 {
+    font-size: 1.4rem;
+    color: var(--primary);
+    margin-bottom: 8px;
+    font-weight: 700;
 }
 
 header p {
-    font-size: 0.9rem;
-    color: #666;
-}
-
-.input-group {
-    margin-bottom: 25px;
-}
-
-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #444;
-}
-
-select, input[type="file"], input[type="range"] {
-    width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
-}
-
-select {
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-}
-
-#previewContainer {
-    margin-top: 15px;
-    text-align: center;
-    background-color: #eee;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-button {
-    width: 100%;
-    padding: 15px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-button:hover {
-    background-color: #2980b9;
-}
-
-#resultSection {
-    background-color: #fafafa;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-}
-
-#diaryOutput {
-    line-height: 1.8;
-    font-size: 1rem;
-    color: #333;
-    white-space: pre-wrap;
+    font-size: 0.85rem;
+    color: #868e96;
 }
 
 /* =========================================
-   📅 カレンダー用のデザイン
+   📅 カレンダーUI
    ========================================= */
 .calendar-container {
     background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 15px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
 }
 
 .calendar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
-}
-
-.calendar-header h2 {
-    font-size: 1.2rem;
-    margin: 0;
-    color: #2c3e50;
+    background-color: #f8f9fa;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border);
 }
 
 .calendar-header button {
     background: none;
-    color: #3498db;
     border: none;
+    color: var(--primary);
     font-size: 1.2rem;
     cursor: pointer;
-    padding: 5px 10px;
-    width: auto;
 }
 
-.calendar-header button:hover {
-    background-color: #f0f0f0;
-}
-
-.calendar-weekdays, .calendar-days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    text-align: center;
+.calendar-header h2 {
+    font-size: 1.1rem;
+    color: var(--text);
+    margin: 0;
 }
 
 .calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    background-color: #fff;
+    font-size: 0.75rem;
     font-weight: bold;
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 5px;
+    padding: 10px 0;
+    color: #adb5bd;
+}
+
+.calendar-weekdays div:first-child { color: var(--danger); } /* 日曜 */
+.calendar-weekdays div:last-child { color: var(--accent); } /* 土曜 */
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    padding-bottom: 10px;
 }
 
 .calendar-days div {
-    padding: 10px 0;
-    font-size: 0.95rem;
+    padding: 12px 0;
     cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+    margin: 2px;
+    border-radius: 10px;
 }
 
 .calendar-days div:hover {
-    background: #f0f0f0;
+    background-color: #f1f3f5;
 }
 
+/* 今日の日付のハイライト */
 .calendar-days div.selected {
-    background: #3498db;
+    background-color: var(--primary);
     color: white;
     font-weight: bold;
+    border-radius: 10px;
 }
 
-.selected-date-status {
-    background: #e9ecef;
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 0.95rem;
+.hint-text {
     text-align: center;
-    margin-bottom: 25px;
-    font-weight: bold;
-    color: #444;
+    color: #adb5bd;
+    font-size: 0.85rem;
+    margin-top: 20px;
 }
+
+/* =========================================
+   📝 エディタ画面UI・ボタン類
+   ========================================= */
+button {
+    cursor: pointer;
+    border: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border-radius: 12px;
+}
+
+.back-btn {
+    background-color: #f1f3f5;
+    color: #495057;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+}
+
+.back-btn:hover { background-color: #e9ecef; }
+.back-btn:active { transform: translateX(-2px); }
+
+.selected-date-status {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 24px;
+    color: var(--text);
+    text-align: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px dashed #ced4da;
+}
+
+.input-group {
+    margin-bottom: 24px;
+}
+
+/* 写真選択ボタン */
+.custom-file-upload {
+    display: block;
+    padding: 16px;
+    background-color: #f8f9fa;
+    border: 2px dashed #ced4da;
+    color: #495057;
+    text-align: center;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.custom-file-upload:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+}
+
+/* 生成ボタン */
+.primary-btn {
+    background-color: var(--primary);
+    color: white;
+    padding: 16px;
+    width: 100%;
+    font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(94, 96, 206, 0.25);
+}
+
+.primary-btn:hover { background-color: #484ab7; }
+.primary-btn:active { transform: translateY(2px); box-shadow: 0 2px 6px rgba(94, 96, 206, 0.2); }
+.primary-btn:disabled { background-color: #ced4da; cursor: not-allowed; box-shadow: none; transform: none; }
+
+/* 日記表示エリア */
+.result-section {
+    margin-top: 24px;
+    padding: 24px;
+    background: #f8f9fa;
+    border-left: 4px solid var(--primary);
+    border-radius: 0 12px 12px 0;
+}
+
+/* 削除ボタン */
+.delete-btn {
+    background-color: transparent;
+    color: var(--danger);
+    font-size: 0.9rem;
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ffe3e3;
+}
+
+.delete-btn:hover { background-color: #fff5f5; }

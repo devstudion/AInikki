@@ -11,7 +11,7 @@
     <div class="container">
         <header>
             <h1>思い出捏造日記</h1>
-            <p>写真1枚から、AIが少しだけ盛った日記を作り出します。</p>
+            <p>写真1枚から、AIが少しだけ盛った日記を作り出します</p>
         </header>
 
         <div id="screenCalendar">
@@ -26,31 +26,32 @@
                 </div>
                 <div id="calendarDays" class="calendar-days"></div>
             </div>
-            <p style="text-align: center; color: #666; font-size: 0.9rem;">
-                👆 日付をタップして日記を開く
-            </p>
+            <p class="hint-text">👆 日付をタップして日記を開く</p>
         </div>
 
         <div id="screenEditor" style="display: none;">
-            <button id="backBtn" style="background-color: #7f8c8d; margin-bottom: 20px; padding: 10px;">◀ カレンダーに戻る</button>
+            <button id="backBtn" class="back-btn">← カレンダーに戻る</button>
 
             <div class="selected-date-status">
-                選択中の日付: <span id="selectedDateText">未選択</span>
+                <span id="selectedDateText">未選択</span>
             </div>
 
             <div id="photoInputArea" class="input-group">
-                <label>📷 写真を選ぶ</label>
-                <input type="file" id="imageInput" accept="image/*">
+                <label for="imageInput" class="custom-file-upload">
+                    📷 写真を選択して日記を盛る
+                </label>
+                <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                
                 <div id="previewContainer">
-                    <img id="imagePreview" style="display:none; max-width: 100%; max-height: 300px; margin-top: 10px; border-radius: 8px;">
+                    <img id="imagePreview" style="display:none; max-width: 100%; max-height: 300px; margin-top: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
                 </div>
             </div>
 
-            <button id="generateBtn">日常を少し盛って日記にする</button>
+            <button id="generateBtn" class="primary-btn">日常を少し盛って日記にする</button>
 
-            <div id="resultSection" style="display: none; margin-top: 20px; padding: 15px;">
-                <p id="diaryOutput"></p>
-                <button id="deleteBtn" style="display: none; background-color: #e74c3c; margin-top: 15px;">🗑️ この日の日記を消す</button>
+            <div id="resultSection" class="result-section" style="display: none;">
+                <p id="diaryOutput" style="line-height: 1.8;"></p>
+                <button id="deleteBtn" class="delete-btn" style="display: none;">🗑️ この日の日記を消す</button>
             </div>
         </div>
 

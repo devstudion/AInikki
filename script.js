@@ -97,6 +97,7 @@ function renderCalendar() {
         const dateStr = `${currentYear}年${currentMonth + 1}月${day}日`;
         const realTodayStr = `${new Date().getFullYear()}年${new Date().getMonth() + 1}月${new Date().getDate()}日`;
         
+        // 今日の日付だけを色付けして固定する
         if (dateStr === realTodayStr) {
             dayDiv.classList.add("selected");
         }
@@ -115,8 +116,16 @@ function renderCalendar() {
     }
 }
 
+// ◀ カレンダーに戻るボタンの処理
 if(backBtn) {
     backBtn.addEventListener("click", () => {
+        // 🌟 カレンダーに戻る時に、選んでいた写真のデータを綺麗にリセット（消去）する
+        imageInput.value = '';
+        imagePreview.src = '';
+        imagePreview.style.display = 'none';
+        base64Image = null;
+
+        // 画面を「カレンダー」に戻す
         screenEditor.style.display = "none";
         screenCalendar.style.display = "block";
         renderCalendar();
@@ -157,7 +166,7 @@ generateBtn.addEventListener('click', async () => {
     deleteBtn.style.display = 'none'; 
     diaryOutput.textContent = '（AIが文章を考えています。数秒お待ちください...）';
 
-    // 🌟 日常モード専用のプロンプト（指示書）
+    // 🌟 日常モード専用のプロンプト
     const promptText = `
 あなたは「思い出を少しだけ脚色する日記ライター」です。
 添付された画像を元に、${selectedDateStr}の日記を書いてください。
