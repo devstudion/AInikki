@@ -1,6 +1,8 @@
-// あなたのAPIキー（正常に動いていたもの）
-const API_KEY = "AQ.Ab8RN6JeoNx8n0lRGZia7HFIeZkjhUIn0vadVL96vQryM6fjoA";
-
+let API_KEY = localStorage.getItem("gemini_api_key");
+if (!API_KEY) {
+    API_KEY = prompt("🔑 GeminiのAPIキーを入力してください（最初だけ）");
+    localStorage.setItem("gemini_api_key", API_KEY);
+}
 // HTMLの要素を取得
 const imageInput = document.getElementById('imageInput');
 const imagePreview = document.getElementById('imagePreview');
