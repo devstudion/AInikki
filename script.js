@@ -1,5 +1,5 @@
 /* =========================================
-   🔑 1. APIキーの確認と保存（安全なプロ仕様）
+   🔑 1. APIキーの確認と保存
    ========================================= */
 let API_KEY = localStorage.getItem("gemini_api_key");
 if (!API_KEY) {
@@ -12,15 +12,12 @@ if (!API_KEY) {
    ========================================= */
 const imageInput = document.getElementById('imageInput');
 const imagePreview = document.getElementById('imagePreview');
-const modeSelect = document.getElementById('modeSelect');
-const fakeSlider = document.getElementById('fakeSlider');
-const fakeRateDisplay = document.getElementById('fakeRateDisplay');
+const photoInputArea = document.getElementById('photoInputArea');
 const generateBtn = document.getElementById('generateBtn');
 const resultSection = document.getElementById('resultSection');
 const diaryOutput = document.getElementById('diaryOutput');
 const deleteBtn = document.getElementById('deleteBtn');
 
-// 画面切り替え用の要素
 const screenCalendar = document.getElementById('screenCalendar');
 const screenEditor = document.getElementById('screenEditor');
 const backBtn = document.getElementById('backBtn');
@@ -35,16 +32,13 @@ let currentYear = new Date().getFullYear();
 let currentMonth = new Date().getMonth(); 
 let currentDay = new Date().getDate(); 
 
-// 基準となる日付
 let selectedDateStr = `${currentYear}年${currentMonth + 1}月${currentDay}日`; 
 
-// 💾 保存された日記を読み込んで、画面の表示をスマートに切り替える関数
 function loadDiary(dateStr) {
     const savedDiary = localStorage.getItem(dateStr);
-    const photoInputArea = imageInput.parentElement; // 写真を選ぶエリア
     
     if (savedDiary) {
-        // 📖 日記がある場合：写真入力と生成ボタンを隠して、結果だけをスッキリ表示！
+        // 📖 日記がある場合
         photoInputArea.style.display = 'none';
         generateBtn.style.display = 'none';
         
@@ -52,7 +46,7 @@ function loadDiary(dateStr) {
         resultSection.style.display = 'block';
         deleteBtn.style.display = 'block';
     } else {
-        // 📝 日記がない場合：写真入力を表示して、結果エリアを隠す！
+        // 📝 日記がない場合
         photoInputArea.style.display = 'block';
         generateBtn.style.display = 'block';
         
@@ -101,9 +95,8 @@ function renderCalendar() {
         dayDiv.innerText = day;
         
         const dateStr = `${currentYear}年${currentMonth + 1}月${day}日`;
-        
-        // 🌟 実際の内蔵時計の「今日」だけを青く固定する！
         const realTodayStr = `${new Date().getFullYear()}年${new Date().getMonth() + 1}月${new Date().getDate()}日`;
+        
         if (dateStr === realTodayStr) {
             dayDiv.classList.add("selected");
         }
@@ -112,10 +105,8 @@ function renderCalendar() {
             selectedDateStr = dateStr;
             document.getElementById("selectedDateText").innerText = selectedDateStr;
             
-            // その日の日記データを読み込む
             loadDiary(selectedDateStr);
 
-            // 🔄 画面を「日記エディタ」に切り替える（中に入る動き）
             screenCalendar.style.display = "none";
             screenEditor.style.display = "block";
         });
@@ -124,14 +115,10 @@ function renderCalendar() {
     }
 }
 
-// ◀ カレンダーに戻るボタンの処理
 if(backBtn) {
     backBtn.addEventListener("click", () => {
-        // 画面を「カレンダー」に戻す
         screenEditor.style.display = "none";
         screenCalendar.style.display = "block";
-        
-        // カレンダーを再描画して最新の状態にする
         renderCalendar();
     });
 }
@@ -154,13 +141,6 @@ imageInput.addEventListener('change', (e) => {
     reader.readAsDataURL(file);
 });
 
-// スライダー
-if(fakeSlider) {
-    fakeSlider.addEventListener('input', (e) => {
-        if(fakeRateDisplay) fakeRateDisplay.textContent = `${e.target.value}%`;
-    });
-}
-
 /* =========================================
    🧠 5. AIに日記を書かせる＆保存する処理
    ========================================= */
@@ -171,26 +151,20 @@ generateBtn.addEventListener('click', async () => {
     }
 
     generateBtn.disabled = true;
-    generateBtn.textContent = '🧠 AIが記憶を改ざん中...';
+    generateBtn.textContent = '🧠 AIが記憶を整理中...';
     
-    // 生成中は一時的に結果エリアを見せておく
     resultSection.style.display = 'block';
     deleteBtn.style.display = 'none'; 
     diaryOutput.textContent = '（AIが文章を考えています。数秒お待ちください...）';
 
-    let selectedMode = "感動"; // default
-    if (modeSelect && modeSelect.options[modeSelect.selectedIndex]) {
-         selectedMode = modeSelect.options[modeSelect.selectedIndex].text;
-    }
-    let fakeRate = fakeSlider ? fakeSlider.value : 100;
-
+    // 🌟 日常モード専用のプロンプト（指示書）
     const promptText = `
-あなたは「思い出を勝手に捏造する日記ライター」です。
+あなたは「思い出を少しだけ脚色する日記ライター」です。
 添付された画像を元に、${selectedDateStr}の日記を書いてください。
 
 【設定】
-- トーン・モード: ${selectedMode}
-- 捏造率（嘘の度合い）: ${fakeRate}%
+- 基本的には写真に写っている通りの「普通で自然な日常の日記」を書いてください。
+- ただし、全体の15%くらいだけ、ほんの少し大げさに表現したり、クスッと笑えるような小さな嘘（盛った表現）をスパイスとして混ぜてください。
 - 文字数: 200字〜300字程度
 - 形式: 日記形式（一人称で、少しポエティックに）
 `;
@@ -223,10 +197,7 @@ generateBtn.addEventListener('click', async () => {
         const data = await response.json();
         const diaryText = data.candidates[0].content.parts[0].text;
         
-        // 💾 ローカルストレージに保存する
         localStorage.setItem(selectedDateStr, diaryText);
-
-        // 🌟 これを呼ぶことで、入力欄がサッと消えて結果が美しく表示されます！
         loadDiary(selectedDateStr);
 
     } catch (error) {
@@ -234,7 +205,7 @@ generateBtn.addEventListener('click', async () => {
         diaryOutput.textContent = 'エラーが発生しました。時間を置いて再度お試しください。';
     } finally {
         generateBtn.disabled = false;
-        generateBtn.textContent = '日記を捏造する';
+        generateBtn.textContent = '日常を少し盛って日記にする';
     }
 });
 
@@ -243,17 +214,14 @@ generateBtn.addEventListener('click', async () => {
    ========================================= */
 deleteBtn.addEventListener('click', () => {
     if (confirm(`${selectedDateStr} の日記を本当に削除しますか？`)) {
-        // ブラウザの記憶から消し去る
         localStorage.removeItem(selectedDateStr);
         alert('削除しました！');
         
-        // 画像プレビューもリセットしておく
         imageInput.value = '';
         imagePreview.src = '';
         imagePreview.style.display = 'none';
         base64Image = null;
 
-        // 🌟 画面を「日記がない状態（入力画面）」に自動で戻す！
         loadDiary(selectedDateStr); 
     }
 });

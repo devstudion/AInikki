@@ -11,7 +11,7 @@
     <div class="container">
         <header>
             <h1>思い出捏造日記</h1>
-            <p>写真1枚から、AIが勝手に思い出を作り出します。</p>
+            <p>写真1枚から、AIが少しだけ盛った日記を作り出します。</p>
         </header>
 
         <div id="screenCalendar">
@@ -38,7 +38,7 @@
                 選択中の日付: <span id="selectedDateText">未選択</span>
             </div>
 
-            <div class="input-group">
+            <div id="photoInputArea" class="input-group">
                 <label>📷 写真を選ぶ</label>
                 <input type="file" id="imageInput" accept="image/*">
                 <div id="previewContainer">
@@ -46,21 +46,7 @@
                 </div>
             </div>
 
-            <div class="input-group" style="display: none;">
-                <label>モード</label>
-                <select id="modeSelect">
-                    <option value="感動">感動モード</option>
-                    <option value="ホラー">ホラーモード</option>
-                    <option value="SF">SFモード</option>
-                    <option value="コメディ">コメディモード</option>
-                </select>
-            </div>
-            <div class="input-group" style="display: none;">
-                <label>🎛️ 思い出の捏造率: <span id="fakeRateDisplay">100%</span></label>
-                <input type="range" id="fakeSlider" min="0" max="100" value="100">
-            </div>
-
-            <button id="generateBtn">日記を捏造する</button>
+            <button id="generateBtn">日常を少し盛って日記にする</button>
 
             <div id="resultSection" style="display: none; margin-top: 20px; padding: 15px;">
                 <p id="diaryOutput"></p>
