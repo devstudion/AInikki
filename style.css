@@ -2,6 +2,7 @@
     --primary: #5e60ce;      /* 洗練されたパープル系 */
     --accent: #48bfe3;       /* 爽やかなブルー系 */
     --danger: #ff6b6b;       /* 柔らかい赤 */
+    --success: #2ecc71;      /* 🌟 追加：日記がある日の緑色 */
     --bg: #f4f6f8;           /* 少しグレーがかった背景色 */
     --text: #2d3436;         /* 濃いグレーの文字色 */
     --border: #e9ecef;       /* 薄い枠線 */
@@ -27,25 +28,21 @@ body {
     background-color: #fff;
     min-height: 90vh;
     padding: 30px 24px;
-    border-radius: 20px; /* 全体的に丸みを帯びたデザイン */
+    border-radius: 20px; 
     box-shadow: 0 10px 25px rgba(0,0,0,0.05);
 }
 
 header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 24px; 
 }
 
 header h1 {
-    font-size: 1.4rem;
+    font-size: 1.6rem; 
     color: var(--primary);
-    margin-bottom: 8px;
     font-weight: 700;
-}
-
-header p {
-    font-size: 0.85rem;
-    color: #868e96;
+    letter-spacing: 1px; 
+    margin: 0; 
 }
 
 /* =========================================
@@ -109,6 +106,7 @@ header p {
     font-size: 0.95rem;
     margin: 2px;
     border-radius: 10px;
+    position: relative; /* 🌟 追加：緑の丸をつける基準位置 */
 }
 
 .calendar-days div:hover {
@@ -121,6 +119,24 @@ header p {
     color: white;
     font-weight: bold;
     border-radius: 10px;
+}
+
+/* 🌟 追加：日記がある日の印（小さな丸） */
+.calendar-days div.has-diary::after {
+    content: "";
+    position: absolute;
+    bottom: 4px; /* 下部に配置 */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: var(--success); /* 緑色 */
+    border-radius: 50%;
+}
+
+/* 🌟 追加：今日（青背景）に日記がある場合は、丸を白にする */
+.calendar-days div.selected.has-diary::after {
+    background-color: #fff;
 }
 
 .hint-text {

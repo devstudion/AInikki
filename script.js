@@ -21,6 +21,7 @@ const deleteBtn = document.getElementById('deleteBtn');
 const screenCalendar = document.getElementById('screenCalendar');
 const screenEditor = document.getElementById('screenEditor');
 const backBtn = document.getElementById('backBtn');
+const imageInputLabel = document.getElementById('imageInputLabel'); 
 
 let base64Image = null;
 let imageMimeType = null;
@@ -101,6 +102,11 @@ function renderCalendar() {
         if (dateStr === realTodayStr) {
             dayDiv.classList.add("selected");
         }
+
+        // 🌟 追加：この日の日記が保存されているかチェックし、丸印のクラスを追加
+        if (localStorage.getItem(dateStr)) {
+            dayDiv.classList.add("has-diary");
+        }
         
         dayDiv.addEventListener("click", () => {
             selectedDateStr = dateStr;
@@ -119,16 +125,19 @@ function renderCalendar() {
 // ◀ カレンダーに戻るボタンの処理
 if(backBtn) {
     backBtn.addEventListener("click", () => {
-        // 🌟 カレンダーに戻る時に、選んでいた写真のデータを綺麗にリセット（消去）する
+        // 写真のデータを綺麗にリセット
         imageInput.value = '';
         imagePreview.src = '';
         imagePreview.style.display = 'none';
         base64Image = null;
 
+        // ラベルの文字を初期状態に戻す
+        if (imageInputLabel) imageInputLabel.textContent = '📷 写真を選択して日記を書く';
+
         // 画面を「カレンダー」に戻す
         screenEditor.style.display = "none";
         screenCalendar.style.display = "block";
-        renderCalendar();
+        renderCalendar(); // 🌟 カレンダーを再描画（日記を書いた直後に丸を反映させるため）
     });
 }
 
@@ -146,6 +155,9 @@ imageInput.addEventListener('change', (e) => {
         imagePreview.src = event.target.result;
         imagePreview.style.display = 'block';
         base64Image = event.target.result.split(',')[1];
+
+        // 写真が読み込まれたら文字を変える
+        if (imageInputLabel) imageInputLabel.textContent = '📷 写真を選びなおす';
     };
     reader.readAsDataURL(file);
 });
@@ -166,7 +178,6 @@ generateBtn.addEventListener('click', async () => {
     deleteBtn.style.display = 'none'; 
     diaryOutput.textContent = '（AIが文章を考えています。数秒お待ちください...）';
 
-    // 🌟 日常モード専用のプロンプト
     const promptText = `
 あなたは「思い出を少しだけ脚色する日記ライター」です。
 添付された画像を元に、${selectedDateStr}の日記を書いてください。
@@ -214,7 +225,7 @@ generateBtn.addEventListener('click', async () => {
         diaryOutput.textContent = 'エラーが発生しました。時間を置いて再度お試しください。';
     } finally {
         generateBtn.disabled = false;
-        generateBtn.textContent = '日常を少し盛って日記にする';
+        generateBtn.textContent = '日記を書く'; 
     }
 });
 
@@ -226,10 +237,14 @@ deleteBtn.addEventListener('click', () => {
         localStorage.removeItem(selectedDateStr);
         alert('削除しました！');
         
+        // 写真データをリセット
         imageInput.value = '';
         imagePreview.src = '';
         imagePreview.style.display = 'none';
         base64Image = null;
+
+        // ラベルの文字を初期状態に戻す
+        if (imageInputLabel) imageInputLabel.textContent = '📷 写真を選択して日記を書く';
 
         loadDiary(selectedDateStr); 
     }
