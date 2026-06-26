@@ -1,11 +1,12 @@
 :root {
-    --primary: #5e60ce;      /* 洗練されたパープル系 */
-    --accent: #48bfe3;       /* 爽やかなブルー系 */
-    --danger: #ff6b6b;       /* 柔らかい赤 */
-    --success: #2ecc71;      /* 🌟 追加：日記がある日の緑色 */
-    --bg: #f4f6f8;           /* 少しグレーがかった背景色 */
-    --text: #2d3436;         /* 濃いグレーの文字色 */
-    --border: #e9ecef;       /* 薄い枠線 */
+    --primary: #111827;      /* 墨色に近い、深みのある最高にシックな黒 */
+    --accent: #4f46e5;       /* ニュアンスのある洗練されたインディゴブルー */
+    --danger: #ef4444;       /* 落ち着いたインテリジェンスな赤 */
+    --success: #10b981;      /* 鮮やかすぎない洗練されたエメラルド */
+    --bg: #f9fafb;           /* ほんのり温かみのある、目に優しいオフホワイト */
+    --text: #1f2937;         /* ナラティブな文章が映えるチャコールグレー */
+    --card-bg: #ffffff;
+    --border: #f3f4f6;       /* 限界まで薄くした上品な境界線 */
 }
 
 * {
@@ -15,227 +16,299 @@
 }
 
 body {
-    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
     background-color: var(--bg);
     color: var(--text);
-    line-height: 1.6;
-    padding: 20px;
+    line-height: 1.7;
+    padding: 40px 20px;
+    -webkit-font-smoothing: antialiased; /* 文字をクッキリ美しく見せる */
 }
 
 .container {
-    max-width: 450px;
+    max-width: 420px; /* 少しスリムにして凝縮感を出す */
     margin: 0 auto;
-    background-color: #fff;
-    min-height: 90vh;
-    padding: 30px 24px;
-    border-radius: 20px; 
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    background-color: var(--card-bg);
+    min-height: 85vh;
+    padding: 40px 32px;
+    border-radius: 28px; /* 角丸を滑らかに広げてモダンに */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02), 0 20px 50px rgba(0, 0, 0, 0.04); /* シャドウを究極に薄く広く */
 }
 
 header {
     text-align: center;
-    margin-bottom: 24px; 
+    margin-bottom: 36px; 
 }
 
 header h1 {
-    font-size: 1.6rem; 
+    font-size: 1.4rem; /* ギラギラさせず、あえて少し小ぶりに */
     color: var(--primary);
-    font-weight: 700;
-    letter-spacing: 1px; 
+    font-weight: 800;
+    letter-spacing: 2px; /* 文字の間隔を広げて高級感を出す */
+    text-transform: uppercase; /* 大文字をスタイリッシュに */
     margin: 0; 
 }
 
 /* =========================================
-   📅 カレンダーUI
+   📅 カレンダーUI（ノイズを削ぎ落とす）
    ========================================= */
 .calendar-container {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
+    background: var(--card-bg);
+    border: none; /* 枠線をなくす */
 }
 
 .calendar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #f8f9fa;
-    padding: 15px 20px;
+    padding: 10px 4px 20px 4px;
+    background: none;
     border-bottom: 1px solid var(--border);
 }
 
 .calendar-header button {
     background: none;
     border: none;
-    color: var(--primary);
-    font-size: 1.2rem;
+    color: #9ca3af;
+    font-size: 0.9rem;
     cursor: pointer;
+    padding: 8px;
+    transition: color 0.2s;
 }
+.calendar-header button:hover { color: var(--primary); }
 
 .calendar-header h2 {
-    font-size: 1.1rem;
-    color: var(--text);
-    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 0.5px;
 }
 
 .calendar-weekdays {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     text-align: center;
-    background-color: #fff;
     font-size: 0.75rem;
-    font-weight: bold;
-    padding: 10px 0;
-    color: #adb5bd;
+    font-weight: 600;
+    padding: 16px 0 8px 0;
+    color: #9ca3af;
 }
-
-.calendar-weekdays div:first-child { color: var(--danger); } /* 日曜 */
-.calendar-weekdays div:last-child { color: var(--accent); } /* 土曜 */
+.calendar-weekdays div:first-child { color: #f87171; } /* 日曜を優しく */
+.calendar-weekdays div:last-child { color: #60a5fa; }  /* 土曜を優しく */
 
 .calendar-days {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     text-align: center;
-    padding-bottom: 10px;
+    gap: 4px; /* 綺麗に並べるための微調整 */
 }
 
 .calendar-days div {
-    padding: 12px 0;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: all 0.2s;
-    font-size: 0.95rem;
-    margin: 2px;
-    border-radius: 10px;
-    position: relative; /* 🌟 追加：緑の丸をつける基準位置 */
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #4b5563;
+    border-radius: 50%; /* 四角ではなく、ホバー時に綺麗な丸になるように */
+    position: relative; 
 }
 
 .calendar-days div:hover {
-    background-color: #f1f3f5;
+    background-color: #f3f4f6;
+    color: var(--primary);
 }
 
-/* 今日の日付のハイライト */
+/* 今日の日付（ソリッドで知的なハイライト） */
 .calendar-days div.selected {
     background-color: var(--primary);
-    color: white;
-    font-weight: bold;
-    border-radius: 10px;
+    color: #ffffff;
+    font-weight: 600;
 }
 
-/* 🌟 追加：日記がある日の印（小さな丸） */
+/* 日記がある日の印（中心に干渉しない、ごく小さな美しいドット） */
 .calendar-days div.has-diary::after {
     content: "";
     position: absolute;
-    bottom: 4px; /* 下部に配置 */
+    bottom: 3px;
     left: 50%;
     transform: translateX(-50%);
-    width: 6px;
-    height: 6px;
-    background-color: var(--success); /* 緑色 */
+    width: 4px;
+    height: 4px;
+    background-color: var(--success);
     border-radius: 50%;
 }
 
-/* 🌟 追加：今日（青背景）に日記がある場合は、丸を白にする */
+/* 今日の日付の上にドットがある場合は白にする */
 .calendar-days div.selected.has-diary::after {
-    background-color: #fff;
+    background-color: #ffffff;
 }
 
 .hint-text {
     text-align: center;
-    color: #adb5bd;
-    font-size: 0.85rem;
-    margin-top: 20px;
+    color: #9ca3af;
+    font-size: 0.8rem;
+    margin-top: 28px;
+    letter-spacing: 0.5px;
 }
 
 /* =========================================
-   📝 エディタ画面UI・ボタン類
+   📝 エディタ画面UI（引き算の美学）
    ========================================= */
 button {
     cursor: pointer;
     border: none;
     font-weight: 600;
-    transition: all 0.2s ease;
-    border-radius: 12px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .back-btn {
-    background-color: #f1f3f5;
-    color: #495057;
-    padding: 10px 16px;
-    font-size: 0.9rem;
-    margin-bottom: 24px;
+    background: none;
+    color: #9ca3af;
+    padding: 0;
+    font-size: 0.85rem;
+    margin-bottom: 32px;
+    display: inline-flex;
+    align-items: center;
 }
-
-.back-btn:hover { background-color: #e9ecef; }
-.back-btn:active { transform: translateX(-2px); }
+.back-btn:hover { color: var(--primary); }
 
 .selected-date-status {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 24px;
-    color: var(--text);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 32px;
+    color: var(--primary);
     text-align: center;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 12px;
-    border: 1px dashed #ced4da;
+    padding: 0 0 12px 0;
+    border-bottom: 1px dashed #e5e7eb; /* 野暮ったい囲み枠をやめ、下線のみに */
 }
 
 .input-group {
-    margin-bottom: 24px;
+    margin-bottom: 28px;
 }
 
-/* 写真選択ボタン */
+/* 写真選択（AI特有の"点線囲み"を廃止し、洗練されたミニマルボタンへ） */
 .custom-file-upload {
     display: block;
-    padding: 16px;
-    background-color: #f8f9fa;
-    border: 2px dashed #ced4da;
-    color: #495057;
+    padding: 14px;
+    background-color: #f3f4f6;
+    color: #4b5563;
     text-align: center;
     border-radius: 12px;
-    font-weight: bold;
+    font-size: 0.9rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s;
 }
 
 .custom-file-upload:hover {
-    background-color: #e9ecef;
-    border-color: #adb5bd;
+    background-color: #e5e7eb;
+    color: var(--primary);
 }
 
-/* 生成ボタン */
+/* 生成ボタン（フラットで上質な重み） */
 .primary-btn {
     background-color: var(--primary);
     color: white;
     padding: 16px;
     width: 100%;
-    font-size: 1rem;
-    box-shadow: 0 4px 12px rgba(94, 96, 206, 0.25);
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    border-radius: 14px;
 }
 
-.primary-btn:hover { background-color: #484ab7; }
-.primary-btn:active { transform: translateY(2px); box-shadow: 0 2px 6px rgba(94, 96, 206, 0.2); }
-.primary-btn:disabled { background-color: #ced4da; cursor: not-allowed; box-shadow: none; transform: none; }
+.primary-btn:hover { background-color: #1f2937; }
+.primary-btn:active { transform: scale(0.99); }
+.primary-btn:disabled { background-color: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
 
-/* 日記表示エリア */
+/* 日記表示エリア（"いかにも"な左線を廃止。美しいフォントと余白で読ませる） */
 .result-section {
-    margin-top: 24px;
-    padding: 24px;
-    background: #f8f9fa;
-    border-left: 4px solid var(--primary);
-    border-radius: 0 12px 12px 0;
+    margin-top: 36px;
+    padding: 8px 4px;
+    background: none; /* 背景の塗りをなくして、ノートに書かれた文字のように */
+    border-left: none; 
 }
 
-/* 削除ボタン */
+#diaryOutput {
+    font-size: 0.95rem;
+    color: #374151;
+    line-height: 1.9; /* 行間を広げて圧倒的に読みやすく */
+    letter-spacing: 0.3px;
+    white-space: pre-wrap;
+}
+
+/* 削除ボタン（控えめで美しいリンク風） */
 .delete-btn {
     background-color: transparent;
-    color: var(--danger);
-    font-size: 0.9rem;
-    margin-top: 20px;
-    width: 100%;
+    color: #9ca3af;
+    font-size: 0.8rem;
+    margin-top: 40px;
+    width: auto;
+    display: block;
     text-align: center;
-    padding: 10px;
-    border: 1px solid #ffe3e3;
+    padding: 8px;
+    border: none;
+    text-decoration: underline;
+    text-underline-offset: 4px;
 }
 
-.delete-btn:hover { background-color: #fff5f5; }
+.delete-btn:hover { color: var(--danger); background: none; }
+
+.custom-modal {
+    margin: auto; /* 画面のど真ん中に配置 */
+    padding: 32px 24px;
+    border: none;
+    border-radius: 20px;
+    background: #ffffff;
+    color: var(--text);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 320px;
+    width: 90%;
+}
+
+/* ポップアップの後ろの背景（暗くしてぼかす） */
+.custom-modal::backdrop {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px); 
+}
+
+.custom-modal p {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 28px;
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.modal-btn {
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+.cancel-btn {
+    background: #f3f4f6;
+    color: #4b5563;
+}
+.cancel-btn:hover { background: #e5e7eb; }
+
+.confirm-btn {
+    background: var(--primary);
+    color: white;
+}
+.confirm-btn:hover { background: #1f2937; }
+
+/* 削除用の赤いボタン */
+.confirm-btn.danger {
+    background: var(--danger);
+}
+.confirm-btn.danger:hover { background: #dc2626; }

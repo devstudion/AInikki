@@ -27,6 +27,47 @@ let base64Image = null;
 let imageMimeType = null;
 
 /* =========================================
+   🪟 🆕 カスタムポップアップを呼び出す関数
+   ========================================= */
+function showCustomModal(message, type = 'alert') {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('customModal');
+        const msgEl = document.getElementById('modalMessage');
+        const cancelBtn = document.getElementById('modalCancelBtn');
+        const confirmBtn = document.getElementById('modalConfirmBtn');
+
+        msgEl.textContent = message;
+
+        // 一旦ボタンのイベントをリセット
+        cancelBtn.onclick = null;
+        confirmBtn.onclick = null;
+
+        // タイプによってボタンの表示・非表示を切り替え
+        if (type === 'confirm') {
+            cancelBtn.style.display = 'block';
+            confirmBtn.textContent = '削除する';
+            confirmBtn.classList.add('danger');
+        } else {
+            cancelBtn.style.display = 'none'; // Alertの時はキャンセルを隠す
+            confirmBtn.textContent = 'OK';
+            confirmBtn.classList.remove('danger');
+        }
+
+        cancelBtn.onclick = () => {
+            modal.close();
+            resolve(false); // 「いいえ」の時は false を返す
+        };
+
+        confirmBtn.onclick = () => {
+            modal.close();
+            resolve(true); // 「はい」の時は true を返す
+        };
+
+        modal.showModal(); // モーダルを表示
+    });
+}
+
+/* =========================================
    📅 3. カレンダーと保存・呼出の処理
    ========================================= */
 let currentYear = new Date().getFullYear();
@@ -39,18 +80,14 @@ function loadDiary(dateStr) {
     const savedDiary = localStorage.getItem(dateStr);
     
     if (savedDiary) {
-        // 📖 日記がある場合
         photoInputArea.style.display = 'none';
         generateBtn.style.display = 'none';
-        
         diaryOutput.textContent = savedDiary;
         resultSection.style.display = 'block';
         deleteBtn.style.display = 'block';
     } else {
-        // 📝 日記がない場合
         photoInputArea.style.display = 'block';
         generateBtn.style.display = 'block';
-        
         resultSection.style.display = 'none';
         deleteBtn.style.display = 'none';
         diaryOutput.textContent = '';
@@ -88,6 +125,7 @@ function renderCalendar() {
     
     for (let i = 0; i < firstDayIndex; i++) {
         const emptyDiv = document.createElement("div");
+        emptyDiv.style.pointerEvents = 'none'; 
         daysContainer.appendChild(emptyDiv);
     }
     
@@ -98,12 +136,10 @@ function renderCalendar() {
         const dateStr = `${currentYear}年${currentMonth + 1}月${day}日`;
         const realTodayStr = `${new Date().getFullYear()}年${new Date().getMonth() + 1}月${new Date().getDate()}日`;
         
-        // 今日の日付だけを色付けして固定する
         if (dateStr === realTodayStr) {
             dayDiv.classList.add("selected");
         }
 
-        // 🌟 追加：この日の日記が保存されているかチェックし、丸印のクラスを追加
         if (localStorage.getItem(dateStr)) {
             dayDiv.classList.add("has-diary");
         }
@@ -120,24 +156,25 @@ function renderCalendar() {
         
         daysContainer.appendChild(dayDiv);
     }
+
+    while (daysContainer.children.length < 42) {
+        const emptyDiv = document.createElement("div");
+        emptyDiv.style.pointerEvents = 'none'; 
+        daysContainer.appendChild(emptyDiv);
+    }
 }
 
-// ◀ カレンダーに戻るボタンの処理
 if(backBtn) {
     backBtn.addEventListener("click", () => {
-        // 写真のデータを綺麗にリセット
         imageInput.value = '';
         imagePreview.src = '';
         imagePreview.style.display = 'none';
         base64Image = null;
-
-        // ラベルの文字を初期状態に戻す
         if (imageInputLabel) imageInputLabel.textContent = '📷 写真を選択して日記を書く';
 
-        // 画面を「カレンダー」に戻す
         screenEditor.style.display = "none";
         screenCalendar.style.display = "block";
-        renderCalendar(); // 🌟 カレンダーを再描画（日記を書いた直後に丸を反映させるため）
+        renderCalendar(); 
     });
 }
 
@@ -155,8 +192,6 @@ imageInput.addEventListener('change', (e) => {
         imagePreview.src = event.target.result;
         imagePreview.style.display = 'block';
         base64Image = event.target.result.split(',')[1];
-
-        // 写真が読み込まれたら文字を変える
         if (imageInputLabel) imageInputLabel.textContent = '📷 写真を選びなおす';
     };
     reader.readAsDataURL(file);
@@ -167,7 +202,8 @@ imageInput.addEventListener('change', (e) => {
    ========================================= */
 generateBtn.addEventListener('click', async () => {
     if (!base64Image) {
-        alert('まずは写真を選んでください！');
+        // 👇 デフォルトの alert の代わりに、カスタムポップアップを呼び出す
+        await showCustomModal('まずは写真を選んでください！', 'alert');
         return;
     }
 
@@ -232,18 +268,21 @@ generateBtn.addEventListener('click', async () => {
 /* =========================================
    🗑️ 6. 日記を削除する処理
    ========================================= */
-deleteBtn.addEventListener('click', () => {
-    if (confirm(`${selectedDateStr} の日記を本当に削除しますか？`)) {
+// 👇 async を追加し、confirm の代わりにカスタムポップアップで確認を取る
+deleteBtn.addEventListener('click', async () => {
+    const isConfirmed = await showCustomModal(`${selectedDateStr} の日記を本当に削除しますか？`, 'confirm');
+    
+    if (isConfirmed) {
         localStorage.removeItem(selectedDateStr);
-        alert('削除しました！');
         
-        // 写真データをリセット
+        // 👇 削除完了もカスタムポップアップでお知らせ
+        await showCustomModal('削除しました！', 'alert');
+        
         imageInput.value = '';
         imagePreview.src = '';
         imagePreview.style.display = 'none';
         base64Image = null;
 
-        // ラベルの文字を初期状態に戻す
         if (imageInputLabel) imageInputLabel.textContent = '📷 写真を選択して日記を書く';
 
         loadDiary(selectedDateStr); 
