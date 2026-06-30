@@ -212,7 +212,7 @@ generateBtn.addEventListener('click', async () => {
     
     resultSection.style.display = 'block';
     deleteBtn.style.display = 'none'; 
-    diaryOutput.textContent = '（AIが文章を考えています。数秒お待ちください...）';
+    diaryOutput.textContent = '（AIが文章を考えています。数秒お待ちください）';
 
     const promptText = `
 あなたは「思い出を少しだけ脚色する日記ライター」です。
